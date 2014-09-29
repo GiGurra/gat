@@ -1,12 +1,47 @@
 *.class
-
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
-# Package Files #
+*.log
 *.jar
-*.war
-*.ear
+*.zip
+*.exe
+README.md~
+.gitignore~
+LICENSE~
+*BuildVersion*
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
+# sbt specific
+.cache/
+.history/
+.lib/
+dist/*
+target/
+lib_managed/
+src_managed/
+project/boot/
+project/plugins/project/
+
+#generated code
+src_generated/
+data_generator/
+data_generated/
+
+#python
+*.pyc
+__pycache__
+
+# Scala-IDE specific
+.scala_dependencies
+.worksheet
+
+# temp files
+*~
+temp/
+
+# eclipse stuff
+.project
+.classpath
+.cache
+.settings
+.settings/
+
+.idea
+.idea/
