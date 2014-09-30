@@ -1,6 +1,7 @@
 package se.gigurra.gat.util;
 
 import javax.media.opengl.GL2ES2;
+import javax.media.opengl.GL2ES3;
 
 import com.jogamp.opengl.util.GLArrayDataServer;
 import com.jogamp.opengl.util.glsl.ShaderState;
@@ -32,9 +33,14 @@ public class VboUtil {
 	public static void attach(final GL2ES2 gl, final ShaderState shaderState, final GLArrayDataServer... vbos) {
 		for (final GLArrayDataServer vbo : vbos) {
 			vbo.bindBuffer(gl, true);
+			shaderState.enableVertexAttribArray(gl, vbo);
 			shaderState.vertexAttribPointer(gl, vbo);
 			vbo.bindBuffer(gl, false);
 		}
+	}
+	
+	public static VertexArrayObject createVAO(final GL2ES3 gl, final boolean enable) {
+		return new VertexArrayObject(gl, enable);
 	}
 
 }

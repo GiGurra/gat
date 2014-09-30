@@ -1,6 +1,7 @@
 package se.gigurra.gat;
 
 import javax.media.opengl.GL2ES2;
+import javax.media.opengl.GL2ES3;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLEventListener;
@@ -9,6 +10,7 @@ import javax.media.opengl.GLUniformData;
 
 import se.gigurra.gat.util.ShaderUtil;
 import se.gigurra.gat.util.VboUtil;
+import se.gigurra.gat.util.VertexArrayObject;
 
 import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.opengl.util.Animator;
@@ -20,7 +22,7 @@ import com.jogamp.opengl.util.glsl.ShaderState;
 public class GatTest implements GLEventListener {
 
 	final PMVMatrix transform = new PMVMatrix();
-	final ShaderState shaderMgr = new ShaderState();
+	final ShaderState glStateMgr = new ShaderState();
 	ShaderProgram shaderProgram;
 
 	// For bouncy triangle
@@ -31,7 +33,7 @@ public class GatTest implements GLEventListener {
 	GLUniformData transformationUniform;
 	GLArrayDataServer vertexVbo;
 	GLArrayDataServer colorVbo;
-
+	VertexArrayObject vao;
 
 	public static void main(String[] s) {
 		GLCapabilities caps = new GLCapabilities(GLProfile.get(GLProfile.GL2ES2));
@@ -52,15 +54,18 @@ public class GatTest implements GLEventListener {
 
 	public void init(GLAutoDrawable drawable) {
 
-		GL2ES2 gl = drawable.getGL().getGL2ES2();
+		GL2ES3 gl = drawable.getGL().getGL2ES3();
 
 		shaderProgram = ShaderUtil.buildProgramFromFile(gl, "shaders/vertexShader.c", "shaders/fragmentShader.c");
+		glStateMgr.attachShaderProgram(gl, shaderProgram, true);
 
-		shaderMgr.attachShaderProgram(gl, shaderProgram, true);
 		transformationUniform = new GLUniformData("uniform_Transformation", 4, 4, transform.glGetMvMatrixf());
+
+		vao = VboUtil.createVAO(gl, true);
 		vertexVbo = VboUtil.createVertexVbo(gl, "attribute_Position", 0.0f, 1.0f, 0.0f, -1.0f, -1.0f, 0.0f, 1.0f, -1.0f, 0.0f);
 		colorVbo = VboUtil.createColorVbo(gl, "attribute_Color", 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.9f);
-		VboUtil.attach(gl, shaderMgr, vertexVbo, colorVbo);
+		VboUtil.attach(gl, glStateMgr, vertexVbo, colorVbo);
+		vao.disable();
 
 	}
 
@@ -88,12 +93,12 @@ public class GatTest implements GLEventListener {
 		transform.glLoadIdentity();
 		transform.glRotatef(30f * (float) s, 1.0f, 0.0f, 1.0f);
 
-		shaderMgr.uniform(gl, transformationUniform);
-		shaderMgr.enableVertexAttribArray(gl, vertexVbo);
-		shaderMgr.enableVertexAttribArray(gl, colorVbo);
+		glStateMgr.uniform(gl, transformationUniform);
+
+		vao.enable();
 		gl.glDrawArrays(GL2ES2.GL_TRIANGLES, 0, 3);
-		shaderMgr.disableVertexAttribArray(gl, colorVbo);
-		shaderMgr.disableVertexAttribArray(gl, vertexVbo);
+		vao.disable();
+
 	}
 
 	public void dispose(GLAutoDrawable drawable) {
