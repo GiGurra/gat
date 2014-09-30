@@ -7,7 +7,6 @@ import javax.media.opengl.GLEventListener;
 import javax.media.opengl.GLProfile;
 import javax.media.opengl.GLUniformData;
 
-import se.gigurra.gat.util.FileUtil;
 import se.gigurra.gat.util.ShaderUtil;
 import se.gigurra.gat.util.VboUtil;
 
@@ -20,26 +19,19 @@ import com.jogamp.opengl.util.glsl.ShaderState;
 
 public class GatTest implements GLEventListener {
 
-	static final int COLOR_IDX = 0;
-	static final int VERTICES_IDX = 1;
-	static int width = 1280;
-	static int height = 720;
-
-	final String vertexShaderCode = FileUtil.file2String("shaders/vertexShader.c");
-	final String fragmentShaderCode = FileUtil.file2String("shaders/fragmentShader.c");
-	final ShaderState shaderState = new ShaderState();
-	final ShaderProgram shaderProgram = new ShaderProgram();
+	final PMVMatrix transform = new PMVMatrix();
+	final ShaderState shaderMgr = new ShaderState();
+	ShaderProgram shaderProgram;
 
 	// For bouncy triangle
 	private double t0 = System.currentTimeMillis();
 	private double theta;
 	private double s;
 
+	GLUniformData transformationUniform;
 	GLArrayDataServer vertexVbo;
 	GLArrayDataServer colorVbo;
-	GLUniformData transformationUniform;
 
-	final PMVMatrix transformation = new PMVMatrix();
 
 	public static void main(String[] s) {
 		GLCapabilities caps = new GLCapabilities(GLProfile.get(GLProfile.GL2ES2));
@@ -47,7 +39,7 @@ public class GatTest implements GLEventListener {
 
 		GLWindow glWindow = GLWindow.create(caps);
 		glWindow.setTitle("Raw GL2ES2 Demo");
-		glWindow.setSize(width, height);
+		glWindow.setSize(1280, 720);
 		glWindow.setUndecorated(false);
 		glWindow.setPointerVisible(true);
 		glWindow.setVisible(true);
@@ -62,23 +54,19 @@ public class GatTest implements GLEventListener {
 
 		GL2ES2 gl = drawable.getGL().getGL2ES2();
 
-		shaderProgram.add(ShaderUtil.buildVertexShader(gl, vertexShaderCode));
-		shaderProgram.add(ShaderUtil.buildFragmentShader(gl, fragmentShaderCode));
-		shaderProgram.link(gl, null);
-		
-		shaderState.attachShaderProgram(gl, shaderProgram, true);
-		transformationUniform = new GLUniformData("uniform_Transformation", 4, 4, transformation.glGetMvMatrixf());
+		shaderProgram = ShaderUtil.buildProgramFromFile(gl, "shaders/vertexShader.c", "shaders/fragmentShader.c");
+
+		shaderMgr.attachShaderProgram(gl, shaderProgram, true);
+		transformationUniform = new GLUniformData("uniform_Transformation", 4, 4, transform.glGetMvMatrixf());
 		vertexVbo = VboUtil.createVertexVbo(gl, "attribute_Position", 0.0f, 1.0f, 0.0f, -1.0f, -1.0f, 0.0f, 1.0f, -1.0f, 0.0f);
 		colorVbo = VboUtil.createColorVbo(gl, "attribute_Color", 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.9f);
-		VboUtil.attach(gl, shaderState, vertexVbo, colorVbo);
+		VboUtil.attach(gl, shaderMgr, vertexVbo, colorVbo);
 
 	}
 
-	public void reshape(GLAutoDrawable drawable, int x, int y, int z, int h) {
-		width = z;
-		height = h;
+	public void reshape(GLAutoDrawable drawable, int x, int y, int w, int h) {
 		GL2ES2 gl = drawable.getGL().getGL2ES2();
-		gl.glViewport((width - height) / 2, 0, height, height);
+		gl.glViewport((w - h) / 2, 0, h, h);
 	}
 
 	public void display(GLAutoDrawable drawable) {
@@ -96,16 +84,16 @@ public class GatTest implements GLEventListener {
 		gl.glClear(GL2ES2.GL_STENCIL_BUFFER_BIT | GL2ES2.GL_COLOR_BUFFER_BIT | GL2ES2.GL_DEPTH_BUFFER_BIT);
 
 		// Transformation matrix
-		transformation.glMatrixMode(PMVMatrix.GL_MODELVIEW);
-		transformation.glLoadIdentity();
-		transformation.glRotatef(30f * (float) s, 1.0f, 0.0f, 1.0f);
-		
-		shaderState.uniform(gl, transformationUniform);
-		shaderState.enableVertexAttribArray(gl, vertexVbo);
-		shaderState.enableVertexAttribArray(gl, colorVbo);
+		transform.glMatrixMode(PMVMatrix.GL_MODELVIEW);
+		transform.glLoadIdentity();
+		transform.glRotatef(30f * (float) s, 1.0f, 0.0f, 1.0f);
+
+		shaderMgr.uniform(gl, transformationUniform);
+		shaderMgr.enableVertexAttribArray(gl, vertexVbo);
+		shaderMgr.enableVertexAttribArray(gl, colorVbo);
 		gl.glDrawArrays(GL2ES2.GL_TRIANGLES, 0, 3);
-		shaderState.disableVertexAttribArray(gl, colorVbo);
-		shaderState.disableVertexAttribArray(gl, vertexVbo);
+		shaderMgr.disableVertexAttribArray(gl, colorVbo);
+		shaderMgr.disableVertexAttribArray(gl, vertexVbo);
 	}
 
 	public void dispose(GLAutoDrawable drawable) {
