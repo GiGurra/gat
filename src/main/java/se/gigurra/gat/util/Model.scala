@@ -12,7 +12,8 @@ import javax.media.opengl.GL2ES3
 class Model(
   val gl: GL2ES3,
   val glStateMgr: ShaderState,
-  val shaderProgram: ShaderProgram) {
+  val shaderProgram: ShaderProgram,
+  val primType: Int = GL.GL_TRIANGLES) {
   val vao = new VertexArrayObject(gl, true)
   val vbos = new ArrayBuffer[GLArrayDataServer]
   var nVertices = 0
@@ -45,7 +46,7 @@ class Model(
     vao.disable()
   }
 
-  def draw(primType: Int = GL.GL_TRIANGLES) {
+  def draw() {
     use {
       gl.glDrawArrays(primType, 0, nVertices)
     }
