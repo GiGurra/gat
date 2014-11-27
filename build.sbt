@@ -5,6 +5,10 @@ name := "gat"
 
 organization := "se.gigurra"
 
+packAutoSettings
+
+com.github.retronym.SbtOneJar.oneJarSettings
+
 version := scala.util.Properties.envOrElse("GAT_BUILD_VERSION", "SNAPSHOT")
 
 isSnapshot := version.value.contains("SNAPSHOT")

@@ -16,8 +16,8 @@ class Model(
   val primType: Int = GL.GL_TRIANGLES) {
   val vao = new VertexArrayObject(gl, true)
   val vbos = new ArrayBuffer[GLArrayDataServer]
-  var nVertices = 0
-  var isSealed = false
+  private var nVertices = 0
+  private var isSealed = false
 
   protected def setVertexVbo(attributeName: String, vertices: Float*): Model = {
     nVertices = vertices.length / 3
