@@ -19,7 +19,7 @@ libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value
 
 libraryDependencies += "se.culvertsoft" % "mgen-javalib" % "0.1"
 
-libraryDependencies += "org.jogamp.gluegen" % "gluegen-rt-main" % "2.2.1"
+libraryDependencies += "org.jogamp.gluegen" % "gluegen-rt-main" % "2.2.4"
 
 libraryDependencies += "org.jogamp.jogl" % "jogl-all-main" % "2.2.4"
 
