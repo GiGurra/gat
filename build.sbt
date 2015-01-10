@@ -21,7 +21,7 @@ libraryDependencies += "se.culvertsoft" % "mgen-javalib" % version.value
 
 libraryDependencies += "org.jogamp.gluegen" % "gluegen-rt-main" % "2.2.1"
 
-libraryDependencies += "org.jogamp.jogl" % "jogl-all-main" % "2.2.1"
+libraryDependencies += "org.jogamp.jogl" % "jogl-all-main" % "2.2.4"
 
 EclipseKeys.withSource := true
 
