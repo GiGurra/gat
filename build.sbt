@@ -17,7 +17,7 @@ crossPaths := false
 
 libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value
 
-libraryDependencies += "se.culvertsoft" % "mgen-javalib" % version.value
+libraryDependencies += "se.culvertsoft" % "mgen-javalib" % "0.1"
 
 libraryDependencies += "org.jogamp.gluegen" % "gluegen-rt-main" % "2.2.1"
 
