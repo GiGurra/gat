@@ -19,21 +19,21 @@ class Model(
   private var nVertices = 0
   private var isSealed = false
 
-  protected def setVertexVbo(attributeName: String, vertices: Float*): Model = {
+  protected def setVertexVbo(attributeName: String, vertices: Array[Float]): Model = {
     nVertices = vertices.length / 3
-    vbos += VboUtil.createVertexVbo(gl, attributeName, vertices: _*)
+    vbos += VboUtil.createVertexVbo(gl, attributeName, vertices)
     this
   }
 
-  protected def setColorVbo(attributeName: String, colors: Float*): Model = {
-    vbos += VboUtil.createColorVbo(gl, attributeName, colors: _*)
+  protected def setColorVbo(attributeName: String, colors: Array[Float]): Model = {
+    vbos += VboUtil.createColorVbo(gl, attributeName, colors)
     this
   }
 
   def seal(): Model = {
     if (!isSealed) {
       isSealed = true
-      VboUtil.attach(gl, glStateMgr, vbos: _*)
+      VboUtil.attach(gl, glStateMgr, vbos)
       vao.disable()
     }
     this
@@ -51,7 +51,7 @@ class Model(
       gl.glDrawArrays(primType, 0, nVertices)
     }
   }
-  
+
   def dispose() {
     vao.dispose()
     for (vbo <- vbos) {

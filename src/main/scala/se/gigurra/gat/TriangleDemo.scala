@@ -25,8 +25,8 @@ class TriangleDemo(gl: GL2ES3) {
   glStateMgr.attachShaderProgram(gl, shaderProgram, true)
 
   val model = new Model(gl, glStateMgr, shaderProgram) {
-    setVertexVbo("attribute_Position", 0.0f, 1.0f, 0.0f, -1.0f, -1.0f, 0.0f, 1.0f, -1.0f, 0.0f)
-    setColorVbo("attribute_Color", 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.9f)
+    setVertexVbo("attribute_Position", Array(0.0f, 1.0f, 0.0f, -1.0f, -1.0f, 0.0f, 1.0f, -1.0f, 0.0f))
+    setColorVbo("attribute_Color", Array(1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.9f))
   }.seal()
 
   def reshape(drawable: GLAutoDrawable, x: Int, y: Int, w: Int, h: Int) {
