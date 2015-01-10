@@ -52,7 +52,6 @@ class TriangleDemo(gl: GL2ES3) {
   }
 
   def dispose(drawable: GLAutoDrawable) {
-    System.exit(0)
   }
 
 }

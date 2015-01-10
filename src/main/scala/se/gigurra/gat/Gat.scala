@@ -46,7 +46,7 @@ class Gat extends GLEventListener {
   }
 
   override def dispose(drawable: GLAutoDrawable) {
-    demo.dispose(drawable)
+    drawable.getAnimator.stop()
   }
 
 }
