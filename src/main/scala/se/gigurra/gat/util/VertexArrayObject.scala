@@ -1,10 +1,11 @@
 package se.gigurra.gat.util
 
+import Edit.EditCls
 import javax.media.opengl.GL2ES3
 
 class VertexArrayObject(gl: GL2ES3, enableNow: Boolean) {
 
-  val glId = Some(Array(0)).map { arr => gl.glGenVertexArrays(1, arr, 0); arr(0) }.get
+  val glId = Array(0).edit(gl.glGenVertexArrays(1, _, 0))(0)
 
   if (enableNow) enable()
 
