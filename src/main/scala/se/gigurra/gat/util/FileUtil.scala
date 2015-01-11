@@ -1,10 +1,19 @@
 package se.gigurra.gat.util;
 
-import java.nio.file.Files
-import java.nio.file.Paths
+import java.io.File
+import java.io.FileNotFoundException
 
 object FileUtil {
-  def file2String(path: String): String = {
-    new String(Files.readAllBytes(Paths.get(path)), "UTF-8");
+
+  def file2String(path: String, enc: String = "UTF-8"): String = {
+    new File(path) match {
+      case f if f.exists() => scala.io.Source.fromFile(f, enc).mkString
+      case _ => Option(ClassLoader.getSystemClassLoader.getResourceAsStream(path)) match {
+        case Some(str) if str.available() > 0 => scala.io.Source.fromInputStream(str, enc).mkString
+        case _                                => throw new FileNotFoundException(path)
+      }
+    }
+
   }
+
 }

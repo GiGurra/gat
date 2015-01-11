@@ -30,6 +30,8 @@ EclipseKeys.withSource := true
 
 EclipseKeys.relativizeLibs := false
 
+unmanagedResourceDirectories in Compile += baseDirectory.value / "shaders"
+
 AssemblyKeys.assemblyMergeStrategy in assembly := {
     case "gluegen-rt.dll" => MergeStrategy.first
     case "jogl_desktop.dll" => MergeStrategy.last
