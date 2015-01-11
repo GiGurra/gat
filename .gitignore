@@ -2,6 +2,8 @@
 *.log
 *.jar
 *.zip
+*.dll
+*.so
 *.exe
 README.md~
 .gitignore~
@@ -45,3 +47,6 @@ temp/
 
 .idea
 .idea/
+
+MANIFEST.MF
+.jnilib
